@@ -18,7 +18,6 @@ module.exports = (function(){
     let [foundPost] = allPosts.filter((post) => {
       return post.title === title;
     });
-    console.log('in getByTitle');
     return foundPost;
   }
 

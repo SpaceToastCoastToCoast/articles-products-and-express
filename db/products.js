@@ -18,7 +18,6 @@ module.exports = (function(){
     let [foundProduct] = allProducts.filter((product) => {
       return product.id === id;
     });
-    console.log('in getProduct');
     return foundProduct;
   }
 

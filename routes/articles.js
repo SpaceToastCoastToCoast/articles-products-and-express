@@ -49,7 +49,6 @@ router.route("/:id")
 })
 .post((req, res) => {
   //html forms suck
-  console.log('in PUT');
   if(req.body._method === "PUT") {
     //find article in collection with same title and edit
     db.editByTitle(req.params.id, req.body);

@@ -26,8 +26,7 @@ router.route("/")
   req.body = {};
   //returns to index to show off the new article!
   res.json({
-    success: true,
-    products: db.all()
+    success: true
   });
 });
 
@@ -52,7 +51,6 @@ router.route("/:id")
 })
 .post((req, res) => {
   //html forms suck
-  console.log('in PUT');
   if(req.body._method === "PUT") {
     //find article in collection with same title and edit
     db.editById(req.params.id, req.body);
