@@ -6,12 +6,16 @@ const logger = require('./logger');
 
 let uniqueID = 1;
 
+function checkNaN(v) {
+  return v != v;
+}
+
 function validateInput(req, res, next) {
   if(req.body.name === undefined || req.body.price === undefined ||
     req.body.inventory === undefined) {
     res.sendStatus(400);
-  } else if(typeof parseFloat(req.body.price.replace(/[^0-9-.]/g, '')) !== "number" ||
-    typeof parseInt(req.body.inventory) !== "number") {
+  } else if(checkNaN(parseFloat(req.body.price.replace(/[^0-9-.]/g, '')))||
+    checkNaN(parseInt(req.body.inventory))) {
     res.sendStatus(400);
   } else {
     next();
@@ -68,10 +72,15 @@ router.route("/:id")
   //html forms suck
   if(req.body._method === "PUT") {
     //find article in collection with same title and edit
-    db.editById(req.params.id, req.body);
-    res.render('products/product', db.getById(parseInt(req.params.id)));
+    let foundProduct = db.getById(parseInt(req.params.id));
+    if(foundProduct !== undefined) {
+      db.editById(req.params.id, req.body);
+      res.render('products/product', foundProduct);
+    } else {
+      res.sendStatus(404);
+    }
   } else {
-    res.sendStatus(404);
+    res.sendStatus(405);
   }
 })
 .delete((req, res) => {

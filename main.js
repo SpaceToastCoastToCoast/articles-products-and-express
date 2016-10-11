@@ -17,3 +17,5 @@ app.use(express.static('./public'));
 const server = app.listen(PORT, () => {
   console.log("server listening on", PORT);
 });
+
+module.exports = app;

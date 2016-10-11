@@ -34,6 +34,9 @@ module.exports = (function(){
       if(changedData.hasOwnProperty('inventory')) {
         productToEdit.inventory = changedData.inventory;
       }
+      return true;
+    } else {
+      return false;
     }
   }
 
