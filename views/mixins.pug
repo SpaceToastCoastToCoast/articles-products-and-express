@@ -1,4 +1,4 @@
 mixin articleList(articles)
   each article in articles
-    a(href=`/${article.urlTitle}`)
+    a(href=`/articles/${article.urlTitle}`)
       li.article #{article.title}

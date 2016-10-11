@@ -1,0 +1,18 @@
+extends ./layout.pug
+
+block title
+  title #{title}
+
+block body
+  -var br = '<br />'
+  form(action=`/articles/${urlTitle}` method='post')
+    input(type='hidden' name='_method' value='PUT')
+    p Title
+    input(type='text' name='title' value=title)
+    p Author
+    input(type='text' name='author' value=author)
+    p Post Body
+    textarea(type='text' name='body' rows='16' cols='48') #{body}
+    !=br
+    !=br
+    input(type='submit' value='submit')

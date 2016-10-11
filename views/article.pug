@@ -4,6 +4,12 @@ block title
   title #{title}
 
 block body
+  -var sp = ' '
   h1 #{title}
   h3 by #{author}
   div#content #{body}
+
+  p
+    a(href='/articles') Back to Index
+    !=sp
+    a(href=`/articles/${urlTitle}/edit`) Edit This Post
