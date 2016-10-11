@@ -191,3 +191,217 @@ describe("product server DELETE", function() {
     .end(done);
   });
 });
+
+
+
+
+
+/*Intentional whitespace*/
+
+
+
+
+
+describe("article server GET", function(){
+
+  it("gives a 400 status code if the Version is not 1.0", function(done) {
+    supertest
+      .get("/articles")
+      .expect(400)
+      .end(done);
+  });
+
+  it("gives the index page when /articles is requested", function(done) {
+    supertest
+      .get("/articles")
+      .set('version', '1.0')
+      .expect(200)
+      .end(done);
+  });
+
+  it("gives a 404 when a nonexistent page is requested", function(done) {
+    supertest
+      .get("/articles/cat%20toy")
+      .set('version', '1.0')
+      .expect(404)
+      .end(done);
+  });
+
+  it("gives a new article creation page when /new is requested, and does not interpret 'new' as a article id", function(done) {
+    supertest
+      .get("/articles/new")
+      .set('version', '1.0')
+      .expect(200)
+      .end(done);
+  });
+});
+
+describe("article server POST", function() {
+  it("returns an error if no or incomplete form data is provided", function(done) {
+    supertest
+    .post("/articles")
+    .set("Content-Type", "application/x-www-form-urlencoded")
+    .set('version', '1.0')
+    .type("form")
+    .send('author=doge')
+    .send('body=bark bark')
+    .expect(400)
+    .end(done);
+  });
+
+  it("returns an error if the version is not 1.0", function(done) {
+    supertest
+    .post("/articles")
+    .set("Content-Type", "application/x-www-form-urlencoded")
+    .type("form")
+    .send('title=Barking Doge')
+    .send('author=doge')
+    .send('body=bark bark')
+    .expect(400)
+    .end(done);
+  });
+
+  it("returns a success message if proper fields are provided", function(done) {
+    supertest
+    .post("/articles")
+    .set("Content-Type", "application/x-www-form-urlencoded")
+    .set('version', '1.0')
+    .type("form")
+    .send('title=Barking Doge')
+    .send('author=doge')
+    .send('body=bark bark')
+    .expect(200)
+    .end(done);
+  });
+
+  it("creates a new page each time POST is sent with valid data", function(done) {
+    supertest
+    .post("/articles")
+    .set("Content-Type", "application/x-www-form-urlencoded")
+    .set('version', '1.0')
+    .type("form")
+    .send('title=Wofeing Doge')
+    .send('author=doge')
+    .send('body=wofe wofe')
+    .expect(200)
+    .end(done);
+  });
+
+  it("creates a page from data in POST body", function(done) {
+    supertest
+    .get("/articles/Barking%20Doge")
+    .set('version', '1.0')
+    .expect(200)
+    .end(done);
+  });
+
+  it("gives each article a URL based on its title", function(done) {
+    supertest
+    .get("/articles/Wofeing%20Doge")
+    .set('version', '1.0')
+    .expect(200)
+    .end(done);
+  });
+
+});
+
+describe("articles server PUT", function() {
+
+  it("must be given an extant article title", function(done) {
+    supertest
+    .get("/articles/Barking Doge")
+    .set('version', '1.0')
+    .expect(200)
+    .end(done);
+  });
+
+  it("has a workaround for the lack of PUT from HTML forms", function(done) {
+    supertest
+    .post("/articles/Barking%20Doge")
+    .set("Content-Type", "application/x-www-form-urlencoded")
+    .set('version', '1.0')
+    .type("form")
+    .send('_method=PUT')
+    .send('title=ANGERY Doge')
+    .send('author=doge')
+    .send('body=bark bark BARK!!')
+    .expect(200)
+    .end(done);
+  });
+
+  it("will not accept from POST requests without the workaround", function(done) {
+    supertest
+    .post("/articles/Wofeing Doge")
+    .set("Content-Type", "application/x-www-form-urlencoded")
+    .set('version', '1.0')
+    .type("form")
+    .send('title=Such Doge')
+    .send('author=doge')
+    .send('body=Wow')
+    .expect(405)
+    .end(done);
+  });
+
+  it("will not edit with invalid or empty input", function(done) {
+    supertest
+    .post("/articles/Wofeing Doge")
+    .set("Content-Type", "application/x-www-form-urlencoded")
+    .set('version', '1.0')
+    .type("form")
+    .send('author=doge')
+    .send('body=Wow')
+    .expect(400)
+    .end(done);
+  });
+
+  it("returns a failure message if the page does not exist", function(done) {
+    supertest
+    .post("/articles/Such Doge")
+    .set("Content-Type", "application/x-www-form-urlencoded")
+    .set('version', '1.0')
+    .type("form")
+    .send('_method=PUT')
+    .send('title=Wofeing Doge')
+    .send('author=doge')
+    .send('body=wofe wofe')
+    .expect(404)
+    .end(done);
+  });
+
+  it("modifies a page from data in PUT body", function(done) {
+    supertest
+    .get("/articles/ANGERY Doge")
+    .set('version', '1.0')
+    .expect(200)
+    .end(done);
+  });
+});
+
+describe("article server DELETE", function() {
+
+  it("returns a failure message if the page does not exist", function(done) {
+    supertest
+    .del("/articles/Such Doge")
+    .set('version', '1.0')
+    .expect(200)
+    .expect(failureMessage)
+    .end(done);
+  });
+
+  it("returns a success message if proper credentials are provided and the page exists", function(done) {
+    supertest
+    .del("/articles/Wofeing Doge")
+    .set('version', '1.0')
+    .expect(200)
+    .expect(successMessage)
+    .end(done);
+  });
+
+  it("removes the resource at the specified url", function(done) {
+    supertest
+    .get("/articles/Wofeing Doge")
+    .set('version', '1.0')
+    .expect(404)
+    .end(done);
+  });
+});
