@@ -1,0 +1,17 @@
+extends ../layout.pug
+
+block title
+  title #{name}
+
+block body
+  -var br = '<br />'
+  form(action=`/products` method='post')
+    p Item Name
+    input(type='text' name='name' placeholder=name)
+    p Price
+    input(type='text' name='price' placeholder=price)
+    p Inventory
+    input(type='text' name='inventory' placeholder=inventory)
+    !=br
+    !=br
+    input(type='submit' value='submit')

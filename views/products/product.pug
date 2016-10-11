@@ -1,0 +1,15 @@
+extends ../layout.pug
+
+block title
+  title #{name}
+
+block body
+  -var sp = ' '
+  h1 #{name}
+  h3 #{price}
+  h5 #{inventory} left in stock
+
+  p
+    a(href='/products') Back to Index
+    !=sp
+    a(href=`/products/${id}/edit`) Edit This Product

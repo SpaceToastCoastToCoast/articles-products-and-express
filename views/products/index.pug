@@ -1,0 +1,11 @@
+extends ../layout.pug
+include ../mixins.pug
+
+block title
+  title All Products
+
+block body
+  h1 All Products
+  ol.productList
+    +productList(products)
+  a(href=`/products/new`) Post New...
