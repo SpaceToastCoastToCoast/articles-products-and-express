@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
 const db = require('../db/products.js');
+const logger = require('./logger');
 
 let uniqueID = 1;
 
@@ -9,8 +10,8 @@ function validateInput(req, res, next) {
   if(req.body.name === undefined || req.body.price === undefined ||
     req.body.inventory === undefined) {
     res.sendStatus(400);
-  } else if(parseFloat(req.body.price.replace(/[^0-9-.]/g, '')).isNaN() ||
-    parseInt(req.body.inventory).isNaN()) {
+  } else if(typeof parseFloat(req.body.price.replace(/[^0-9-.]/g, '')) !== "number" ||
+    typeof parseInt(req.body.inventory) !== "number") {
     res.sendStatus(400);
   } else {
     next();
@@ -18,6 +19,7 @@ function validateInput(req, res, next) {
 }
 
 router.use(bodyParser.urlencoded({ extended : true }));
+router.use(logger);
 
 router.route("/")
 .get((req, res) => {

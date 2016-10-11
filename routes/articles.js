@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
 const db = require('../db/articles.js');
+const logger = require('./logger');
 
 function requireVersion(req, res, next){
   if(req.headers.version !== '1.0') {
@@ -26,6 +27,7 @@ function validateInput(req, res, next) {
 }
 
 router.use(bodyParser.urlencoded({ extended : true }));
+router.use(logger);
 router.use(requireVersion);
 
 router.route("/")
