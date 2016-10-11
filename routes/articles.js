@@ -6,7 +6,7 @@ const logger = require('./logger');
 
 function requireVersion(req, res, next){
   if(req.headers.version !== '1.0') {
-    res.json({
+    res.status(400).json({
       error: 'bad headers'
     });
   } else {
@@ -76,16 +76,21 @@ router.route("/:id")
   //html forms suck
   if(req.body._method === "PUT") {
     //find article in collection with same title and edit
-    db.editByTitle(req.params.id, req.body);
-    res.render('articles/article', db.getByTitle(req.body.title));
+    let foundArticle = db.getByTitle(req.params.id);
+    if(foundArticle !== undefined) {
+      db.editByTitle(req.params.id, req.body);
+      res.render('articles/article', foundArticle);
+    } else {
+      res.sendStatus(404);
+    }
   } else {
-    res.sendStatus(404);
+    res.sendStatus(405);
   }
 })
 .delete((req, res) => {
   //delete by title
   res.json({
-    success: db.deleteBytitle(req.params.id)
+    success: db.deleteByTitle(req.params.id)
   });
 });
 
