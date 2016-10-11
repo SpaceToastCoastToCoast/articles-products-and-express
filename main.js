@@ -2,9 +2,13 @@ const express = require('express');
 const app = express();
 const PORT = 3002;
 const pug = require('pug');
+const bodyParser = require('body-parser');
+const articleRoute = require('./routes/articles.js');
 
+app.use(bodyParser.urlencoded({ extended : true }));
 app.set('view engine', 'pug');
 app.set('views', './views');
+app.use('/articles', articleRoute);
 
 app.use(express.static('./public'));
 

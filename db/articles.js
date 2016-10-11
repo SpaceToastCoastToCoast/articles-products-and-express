@@ -25,6 +25,10 @@ module.exports = (function(){
     let postToEdit = _getByTitle(title);
     let postIndex = allPosts.indexOf(postToEdit);
     if(postIndex > -1) {
+      if(changedData.hasOwnProperty('title')) {
+        postToEdit.title = changedData.title;
+        postToEdit.urlTitle = encodeURI(changedData.title);
+      }
       if(changedData.hasOwnProperty('body')) {
         postToEdit.body = changedData.body;
       }
@@ -47,6 +51,7 @@ module.exports = (function(){
   return {
     all: _all,
     add: _add,
+    getByTitle: _getByTitle,
     deleteByTitle: _deleteByTitle,
     editByTitle: _editByTitle
   };

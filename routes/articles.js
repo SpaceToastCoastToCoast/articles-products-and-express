@@ -5,9 +5,12 @@ const db = require('../db/articles.js');
 
 router.use(bodyParser.urlencoded({ extended : true }));
 
-router.route("/articles")
+router.route("/")
 .get((req, res) => {
   //show all articles on an index page
+  res.render('index', {
+    articles: db.all()
+  });
 })
 .post((req, res) => {
   //create new article from form encoded json data
@@ -21,23 +24,27 @@ router.route("/articles")
   });
 });
 
-router.route("/articles/:title")
+router.route("/:title")
+.get((req, res) => {
+  res.render('article', db.getByTitle(req.params.title));
+})
 .put((req, res) => {
   //find article in collection with same title and edit
+  db.editByTitle(req.params.title, req.body);
 })
 .delete((req, res) => {
   //delete by title
   res.json({
-    success: true
+    success: db.deleteBytitle(req.params.title)
   });
 });
 
-router.route("/articles/:title/edit")
+router.route("/:title/edit")
 .get((req, res) => {
   //give user an edit post form
 });
 
-router.route("/articles/new")
+router.route("/new")
 .get((req, res) => {
   //give user a create post form
 });

@@ -1,0 +1,10 @@
+extends ./layout.pug
+include ./mixins.pug
+
+block title
+  title All Articles
+
+block body
+  h1 All Articles
+  ol.articleList
+    +articleList(articles)
