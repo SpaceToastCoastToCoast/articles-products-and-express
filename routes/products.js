@@ -1,48 +1,49 @@
 const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
-const db = require('../db/articles.js');
+const db = require('../db/products.js');
+
+let uniqueID = 0;
 
 router.use(bodyParser.urlencoded({ extended : true }));
-
 router.route("/")
 .get((req, res) => {
   //show all articles on an index page
-  res.render('articles/index', {
+  res.render('products/index', {
     articles: db.all()
   });
 })
 .post((req, res) => {
   //create new article from form encoded json data
   db.add({
-    title: req.body.title,
-    body: req.body.body,
-    author: req.body.author,
-    urlTitle: encodeURI(req.body.title)
+    id: ++uniqueID,
+    name: req.body.name,
+    price: parseInt(req.body.price),
+    inventory: parseInt(req.body.inventory),
   });
   //wipes data from previous session in case of reload button stuff
   req.body = {};
   //returns to index to show off the new article!
-  res.render('articles/index', {
-    articles: db.all()
+  res.json({
+    success: true
   });
 });
 
 router.route("/new")
 .get((req, res) => {
   //give user a create post form
-  res.render('articles/new', {
-    title: 'Untitled',
-    author: 'Your name here',
-    body: 'Your text here'
+  res.render('products/new', {
+    name: 'Product name',
+    price: 'Price',
+    inventory: 'Number of product in stock'
   });
 });
 
 router.route("/:id")
 .get((req, res) => {
-  let foundArticle = db.getByTitle(req.params.id);
-  if(foundArticle !== undefined) {
-    res.render('articles/article', foundArticle);
+  let foundProduct = db.getById(req.params.id);
+  if(foundProduct !== undefined) {
+    res.render('products/product', foundProduct);
   } else {
     res.sendStatus(404);
   }
@@ -52,8 +53,8 @@ router.route("/:id")
   console.log('in PUT');
   if(req.body._method === "PUT") {
     //find article in collection with same title and edit
-    db.editByTitle(req.params.id, req.body);
-    res.render('articles/article', db.getByTitle(req.body.title));
+    db.editById(req.params.id, req.body);
+    res.render('products/product', db.getById(req.params.id));
   } else {
     res.sendStatus(404);
   }
@@ -61,20 +62,19 @@ router.route("/:id")
 .delete((req, res) => {
   //delete by title
   res.json({
-    success: db.deleteBytitle(req.params.id)
+    success: db.deleteById(req.params.id)
   });
 });
 
 router.route("/:id/edit")
 .get((req, res) => {
   //this will send a PUT to /:id when a button is pressed
-  let foundArticle = db.getByTitle(req.params.id);
-  if(foundArticle !== undefined) {
-    res.render('articles/edit', foundArticle);
+  let foundProduct = db.getById(req.params.id);
+  if(foundProduct !== undefined) {
+    res.render('products/edit', foundProduct);
   } else {
     res.sendStatus(404);
   }
 });
-
 
 module.exports = router;
