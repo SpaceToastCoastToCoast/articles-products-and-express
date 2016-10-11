@@ -18,7 +18,6 @@ function validateInput(req, res, next) {
 }
 
 router.use(bodyParser.urlencoded({ extended : true }));
-router.use(validateInput);
 
 router.route("/")
 .get((req, res) => {
@@ -27,7 +26,7 @@ router.route("/")
     products: db.all()
   });
 })
-.post((req, res) => {
+.post(validateInput, (req, res) => {
   //create new article from form encoded json data
   db.add({
     id: uniqueID,
@@ -63,7 +62,7 @@ router.route("/:id")
     res.sendStatus(404);
   }
 })
-.post((req, res) => {
+.post(validateInput, (req, res) => {
   //html forms suck
   if(req.body._method === "PUT") {
     //find article in collection with same title and edit

@@ -27,7 +27,6 @@ function validateInput(req, res, next) {
 
 router.use(bodyParser.urlencoded({ extended : true }));
 router.use(requireVersion);
-router.use(validateInput);
 
 router.route("/")
 .get((req, res) => {
@@ -36,7 +35,7 @@ router.route("/")
     articles: db.all()
   });
 })
-.post((req, res) => {
+.post(validateInput, (req, res) => {
   //create new article from form encoded json data
   db.add({
     title: req.body.title,
@@ -71,7 +70,7 @@ router.route("/:id")
     res.sendStatus(404);
   }
 })
-.post((req, res) => {
+.post(validateInput, (req, res) => {
   //html forms suck
   if(req.body._method === "PUT") {
     //find article in collection with same title and edit
