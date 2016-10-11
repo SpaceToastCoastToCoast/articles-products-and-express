@@ -10,11 +10,11 @@ module.exports = (function(){
     if(product.name === undefined) {
       return false;
     }
-    allPosts.push(product);
+    allProducts.push(product);
     return true;
   }
 
-  function _getById(product) {
+  function _getById(id) {
     let [foundProduct] = allProducts.filter((product) => {
       return product.id === id;
     });

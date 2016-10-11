@@ -6,4 +6,4 @@ mixin articleList(articles)
 mixin productList(products)
   each product in products
     a(href=`/products/${product.id}`)
-      li.product #{product.name}
+      li.product #{product.name}: #{product.price} (#{product.inventory} in stock)
