@@ -10,7 +10,7 @@ router.route("/")
 .get((req, res) => {
   //show all articles on an index page
   res.render('products/index', {
-    articles: db.all()
+    products: db.all()
   });
 })
 .post((req, res) => {
