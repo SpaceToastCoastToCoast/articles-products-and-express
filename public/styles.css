@@ -1,0 +1,31 @@
+html {
+  background-color: #343838;
+  font-family: monospace;
+  color: #00DFFC;
+}
+
+h1, a {
+  color: #00B4CC;
+}
+h3, h5 {
+  color: #008C9E;
+}
+h1 {
+  background-color: #005F6B;
+  padding: 8px;
+}
+
+li:hover {
+  background-color: #005F6B;
+}
+
+a:visited {
+  color: #008C9E;
+}
+
+input, textarea {
+  font-family: monospace;
+  background-color: #005F6B;
+  color: #00DFFC;
+  border: 2px outset #005F6B;
+}

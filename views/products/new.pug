@@ -7,11 +7,11 @@ block body
   -var br = '<br />'
   form(action=`/products` method='post')
     p Item Name
-    input(type='text' name='name' placeholder=name)
+    input(type='text' name='name' placeholder=name required)
     p Price
-    input(type='text' name='price' placeholder=price)
+    input(type='text' name='price' placeholder=price required)
     p Inventory
-    input(type='text' name='inventory' placeholder=inventory)
+    input(type='text' name='inventory' placeholder=inventory required)
     !=br
     !=br
     input(type='submit' value='submit')
