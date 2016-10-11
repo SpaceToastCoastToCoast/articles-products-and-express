@@ -3,7 +3,18 @@ const router = express.Router();
 const bodyParser = require('body-parser');
 const db = require('../db/articles.js');
 
+function requireVersion(req, res, next){
+  if(req.headers.version !== '1.0') {
+    res.json({
+      error: 'bad headers'
+    });
+  } else {
+    next();
+  }
+}
+
 router.use(bodyParser.urlencoded({ extended : true }));
+router.use(requireVersion);
 
 router.route("/")
 .get((req, res) => {
