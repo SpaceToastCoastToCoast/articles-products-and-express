@@ -13,8 +13,21 @@ function requireVersion(req, res, next){
   }
 }
 
+function validateInput(req, res, next) {
+  if(req.body.title === undefined || req.body.body === undefined ||
+    req.body.author === undefined) {
+    res.sendStatus(400);
+  } else if(req.body.title.length < 1 || req.body.body.length < 1 ||
+    req.body.author.length < 1) {
+    res.sendStatus(400);
+  } else {
+    next();
+  }
+}
+
 router.use(bodyParser.urlencoded({ extended : true }));
 router.use(requireVersion);
+router.use(validateInput);
 
 router.route("/")
 .get((req, res) => {

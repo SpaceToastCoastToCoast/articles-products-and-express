@@ -5,7 +5,21 @@ const db = require('../db/products.js');
 
 let uniqueID = 1;
 
+function validateInput(req, res, next) {
+  if(req.body.name === undefined || req.body.price === undefined ||
+    req.body.inventory === undefined) {
+    res.sendStatus(400);
+  } else if(parseFloat(req.body.price.replace(/[^0-9-.]/g, '')).isNaN() ||
+    parseInt(req.body.inventory).isNaN()) {
+    res.sendStatus(400);
+  } else {
+    next();
+  }
+}
+
 router.use(bodyParser.urlencoded({ extended : true }));
+router.use(validateInput);
+
 router.route("/")
 .get((req, res) => {
   //show all articles on an index page
