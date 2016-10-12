@@ -3,32 +3,13 @@ const router = express.Router();
 const bodyParser = require('body-parser');
 const db = require('../db/articles.js');
 const logger = require('./logger');
+const middleware = require('./middleware');
 
-function requireVersion(req, res, next){
-  if(req.headers.version !== '1.0') {
-    res.status(400).json({
-      error: 'bad headers'
-    });
-  } else {
-    next();
-  }
-}
 
-function validateInput(req, res, next) {
-  if(req.body.title === undefined || req.body.body === undefined ||
-    req.body.author === undefined) {
-    res.sendStatus(400);
-  } else if(req.body.title.length < 1 || req.body.body.length < 1 ||
-    req.body.author.length < 1) {
-    res.sendStatus(400);
-  } else {
-    next();
-  }
-}
 
 router.use(bodyParser.urlencoded({ extended : true }));
 router.use(logger);
-router.use(requireVersion);
+router.use(middleware.requireVersion);
 
 router.route("/")
 .get((req, res) => {
@@ -37,7 +18,7 @@ router.route("/")
     articles: db.all()
   });
 })
-.post(validateInput, (req, res) => {
+.post(middleware.validateArticleInput, (req, res) => {
   //create new article from form encoded json data
   db.add({
     title: req.body.title,
@@ -72,7 +53,7 @@ router.route("/:id")
     res.sendStatus(404);
   }
 })
-.post(validateInput, (req, res) => {
+.post(middleware.validateArticleInput, (req, res) => {
   //html forms suck
   if(req.body._method === "PUT") {
     //find article in collection with same title and edit

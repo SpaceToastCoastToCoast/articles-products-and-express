@@ -3,24 +3,9 @@ const router = express.Router();
 const bodyParser = require('body-parser');
 const db = require('../db/products.js');
 const logger = require('./logger');
+const middleware = require('./middleware');
 
 let uniqueID = 1;
-
-function checkNaN(v) {
-  return v != v;
-}
-
-function validateInput(req, res, next) {
-  if(req.body.name === undefined || req.body.price === undefined ||
-    req.body.inventory === undefined) {
-    res.sendStatus(400);
-  } else if(checkNaN(parseFloat(req.body.price.replace(/[^0-9-.]/g, '')))||
-    checkNaN(parseInt(req.body.inventory))) {
-    res.sendStatus(400);
-  } else {
-    next();
-  }
-}
 
 router.use(bodyParser.urlencoded({ extended : true }));
 router.use(logger);
@@ -32,7 +17,7 @@ router.route("/")
     products: db.all()
   });
 })
-.post(validateInput, (req, res) => {
+.post(middleware.validateProductInput, (req, res) => {
   //create new article from form encoded json data
   db.add({
     id: uniqueID,
@@ -68,7 +53,7 @@ router.route("/:id")
     res.sendStatus(404);
   }
 })
-.post(validateInput, (req, res) => {
+.post(middleware.validateProductInput, (req, res) => {
   //html forms suck
   if(req.body._method === "PUT") {
     //find article in collection with same title and edit
