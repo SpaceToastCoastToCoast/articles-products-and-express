@@ -11,21 +11,21 @@ const failureMessage = JSON.stringify({
 
 describe("product server GET", function(){
 
-  it("gives the index page when /products is requested", function(done) {
+  it("gives the index page when /products is requested", (done) => {
     supertest
       .get("/products")
       .expect(200)
       .end(done);
   });
 
-  it("gives a 404 when a nonexistent page is requested", function(done) {
+  it("gives a 404 when a nonexistent page is requested", (done) => {
     supertest
     .get("/products/cat%20toy")
     .expect(404)
     .end(done);
   });
 
-  it("gives a new product creation page when /new is requested, and does not interpret 'new' as a product id", function(done) {
+  it("gives a new product creation page when /new is requested, and does not interpret 'new' as a product id", (done) => {
     supertest
     .get("/products/new")
     .expect(200)
@@ -34,7 +34,7 @@ describe("product server GET", function(){
 });
 
 describe("product server POST", function() {
-  it("returns an error if no or incomplete form data is provided", function(done) {
+  it("returns an error if no or incomplete form data is provided", (done) => {
     supertest
     .post("/products")
     .set("Content-Type", "application/x-www-form-urlencoded")
@@ -45,7 +45,7 @@ describe("product server POST", function() {
     .end(done);
   });
 
-  it("returns an error if non-numbers are provided in number fields", function(done) {
+  it("returns an error if non-numbers are provided in number fields", (done) => {
     supertest
     .post("/products")
     .set("Content-Type", "application/x-www-form-urlencoded")
@@ -57,7 +57,7 @@ describe("product server POST", function() {
     .end(done);
   });
 
-  it("returns a success message if proper fields are provided", function(done) {
+  it("returns a success message if proper fields are provided", (done) => {
     supertest
     .post("/products")
     .set("Content-Type", "application/x-www-form-urlencoded")
@@ -70,7 +70,7 @@ describe("product server POST", function() {
     .end(done);
   });
 
-  it("creates a new page each time POST is sent with valid data", function(done) {
+  it("creates a new page each time POST is sent with valid data", (done) => {
     supertest
     .post("/products")
     .set("Content-Type", "application/x-www-form-urlencoded")
@@ -83,14 +83,14 @@ describe("product server POST", function() {
     .end(done);
   });
 
-  it("creates a page from data in POST body", function(done) {
+  it("creates a page from data in POST body", (done) => {
     supertest
     .get("/products/1")
     .expect(200)
     .end(done);
   });
 
-  it("gives each item a unique ID upon creation", function(done) {
+  it("gives each item a unique ID upon creation", (done) => {
     supertest
     .get("/products/2")
     .expect(200)
@@ -101,14 +101,14 @@ describe("product server POST", function() {
 
 describe("products server PUT", function() {
 
-  it("must be given an extant item id", function(done) {
+  it("must be given an extant item id", (done) => {
     supertest
     .get("/products/1")
     .expect(200)
     .end(done);
   });
 
-  it("has a workaround for the lack of PUT from HTML forms", function(done) {
+  it("has a workaround for the lack of PUT from HTML forms", (done) => {
     supertest
     .post("/products/1")
     .set("Content-Type", "application/x-www-form-urlencoded")
@@ -121,7 +121,7 @@ describe("products server PUT", function() {
     .end(done);
   });
 
-  it("will not accept from POST requests without the workaround", function(done) {
+  it("will not accept from POST requests without the workaround", (done) => {
     supertest
     .post("/products/1")
     .set("Content-Type", "application/x-www-form-urlencoded")
@@ -133,7 +133,7 @@ describe("products server PUT", function() {
     .end(done);
   });
 
-  it("will not edit with invalid or empty input", function(done) {
+  it("will not edit with invalid or empty input", (done) => {
     supertest
     .post("/products/1")
     .set("Content-Type", "application/x-www-form-urlencoded")
@@ -145,7 +145,7 @@ describe("products server PUT", function() {
     .end(done);
   });
 
-  it("returns a failure message if the page does not exist", function(done) {
+  it("returns a failure message if the page does not exist", (done) => {
     supertest
     .post("/products/cat%20toy")
     .set("Content-Type", "application/x-www-form-urlencoded")
@@ -158,7 +158,7 @@ describe("products server PUT", function() {
     .end(done);
   });
 
-  it("modifies a page from data in PUT body", function(done) {
+  it("modifies a page from data in PUT body", (done) => {
     supertest
     .get("/products/1")
     .expect(200)
@@ -168,7 +168,7 @@ describe("products server PUT", function() {
 
 describe("product server DELETE", function() {
 
-  it("returns a failure message if the page does not exist", function(done) {
+  it("returns a failure message if the page does not exist", (done) => {
     supertest
     .del("/products/496")
     .expect(200)
@@ -176,7 +176,7 @@ describe("product server DELETE", function() {
     .end(done);
   });
 
-  it("returns a success message if proper credentials are provided and the page exists", function(done) {
+  it("returns a success message if proper credentials are provided and the page exists", (done) => {
     supertest
     .del("/products/1")
     .expect(200)
@@ -184,7 +184,7 @@ describe("product server DELETE", function() {
     .end(done);
   });
 
-  it("removes the resource at the specified url", function(done) {
+  it("removes the resource at the specified url", (done) => {
     supertest
     .get("/products/1")
     .expect(404)
@@ -204,14 +204,15 @@ describe("product server DELETE", function() {
 
 describe("article server GET", function(){
 
-  it("gives a 400 status code if the Version is not 1.0", function(done) {
+  it("gives a 400 status code if the Version is not 1.0", (done) => {
     supertest
       .get("/articles")
+      .set('version', '2.0')
       .expect(400)
       .end(done);
   });
 
-  it("gives the index page when /articles is requested", function(done) {
+  it("gives the index page when /articles is requested", (done) => {
     supertest
       .get("/articles")
       .set('version', '1.0')
@@ -219,7 +220,7 @@ describe("article server GET", function(){
       .end(done);
   });
 
-  it("gives a 404 when a nonexistent page is requested", function(done) {
+  it("gives a 404 when a nonexistent page is requested", (done) => {
     supertest
       .get("/articles/cat%20toy")
       .set('version', '1.0')
@@ -227,7 +228,7 @@ describe("article server GET", function(){
       .end(done);
   });
 
-  it("gives a new article creation page when /new is requested, and does not interpret 'new' as a article id", function(done) {
+  it("gives a new article creation page when /new is requested, and does not interpret 'new' as a article id", (done) => {
     supertest
       .get("/articles/new")
       .set('version', '1.0')
@@ -237,7 +238,7 @@ describe("article server GET", function(){
 });
 
 describe("article server POST", function() {
-  it("returns an error if no or incomplete form data is provided", function(done) {
+  it("returns an error if no or incomplete form data is provided", (done) => {
     supertest
     .post("/articles")
     .set("Content-Type", "application/x-www-form-urlencoded")
@@ -249,10 +250,11 @@ describe("article server POST", function() {
     .end(done);
   });
 
-  it("returns an error if the version is not 1.0", function(done) {
+  it("returns an error if the version is not 1.0", (done) => {
     supertest
     .post("/articles")
     .set("Content-Type", "application/x-www-form-urlencoded")
+    .set('version', '2.0')
     .type("form")
     .send('title=Barking Doge')
     .send('author=doge')
@@ -261,7 +263,7 @@ describe("article server POST", function() {
     .end(done);
   });
 
-  it("returns a success message if proper fields are provided", function(done) {
+  it("returns a success message if proper fields are provided", (done) => {
     supertest
     .post("/articles")
     .set("Content-Type", "application/x-www-form-urlencoded")
@@ -274,7 +276,7 @@ describe("article server POST", function() {
     .end(done);
   });
 
-  it("creates a new page each time POST is sent with valid data", function(done) {
+  it("creates a new page each time POST is sent with valid data", (done) => {
     supertest
     .post("/articles")
     .set("Content-Type", "application/x-www-form-urlencoded")
@@ -287,7 +289,7 @@ describe("article server POST", function() {
     .end(done);
   });
 
-  it("creates a page from data in POST body", function(done) {
+  it("creates a page from data in POST body", (done) => {
     supertest
     .get("/articles/Barking%20Doge")
     .set('version', '1.0')
@@ -295,7 +297,7 @@ describe("article server POST", function() {
     .end(done);
   });
 
-  it("gives each article a URL based on its title", function(done) {
+  it("gives each article a URL based on its title", (done) => {
     supertest
     .get("/articles/Wofeing%20Doge")
     .set('version', '1.0')
@@ -307,7 +309,7 @@ describe("article server POST", function() {
 
 describe("articles server PUT", function() {
 
-  it("must be given an extant article title", function(done) {
+  it("must be given an extant article title", (done) => {
     supertest
     .get("/articles/Barking Doge")
     .set('version', '1.0')
@@ -315,7 +317,7 @@ describe("articles server PUT", function() {
     .end(done);
   });
 
-  it("has a workaround for the lack of PUT from HTML forms", function(done) {
+  it("has a workaround for the lack of PUT from HTML forms", (done) => {
     supertest
     .post("/articles/Barking%20Doge")
     .set("Content-Type", "application/x-www-form-urlencoded")
@@ -329,7 +331,7 @@ describe("articles server PUT", function() {
     .end(done);
   });
 
-  it("will not accept from POST requests without the workaround", function(done) {
+  it("will not accept from POST requests without the workaround", (done) => {
     supertest
     .post("/articles/Wofeing Doge")
     .set("Content-Type", "application/x-www-form-urlencoded")
@@ -342,7 +344,7 @@ describe("articles server PUT", function() {
     .end(done);
   });
 
-  it("will not edit with invalid or empty input", function(done) {
+  it("will not edit with invalid or empty input", (done) => {
     supertest
     .post("/articles/Wofeing Doge")
     .set("Content-Type", "application/x-www-form-urlencoded")
@@ -354,7 +356,7 @@ describe("articles server PUT", function() {
     .end(done);
   });
 
-  it("returns a failure message if the page does not exist", function(done) {
+  it("returns a failure message if the page does not exist", (done) => {
     supertest
     .post("/articles/Such Doge")
     .set("Content-Type", "application/x-www-form-urlencoded")
@@ -368,7 +370,7 @@ describe("articles server PUT", function() {
     .end(done);
   });
 
-  it("modifies a page from data in PUT body", function(done) {
+  it("modifies a page from data in PUT body", (done) => {
     supertest
     .get("/articles/ANGERY Doge")
     .set('version', '1.0')
@@ -379,7 +381,7 @@ describe("articles server PUT", function() {
 
 describe("article server DELETE", function() {
 
-  it("returns a failure message if the page does not exist", function(done) {
+  it("returns a failure message if the page does not exist", (done) => {
     supertest
     .del("/articles/Such Doge")
     .set('version', '1.0')
@@ -388,7 +390,7 @@ describe("article server DELETE", function() {
     .end(done);
   });
 
-  it("returns a success message if proper credentials are provided and the page exists", function(done) {
+  it("returns a success message if proper credentials are provided and the page exists", (done) => {
     supertest
     .del("/articles/Wofeing Doge")
     .set('version', '1.0')
@@ -397,7 +399,7 @@ describe("article server DELETE", function() {
     .end(done);
   });
 
-  it("removes the resource at the specified url", function(done) {
+  it("removes the resource at the specified url", (done) => {
     supertest
     .get("/articles/Wofeing Doge")
     .set('version', '1.0')

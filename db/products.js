@@ -2,11 +2,11 @@ module.exports = (function(){
 
   let allProducts = [];
 
-  function _all() {
+  let _all = () => {
     return allProducts;
   }
 
-  function _add(product) {
+  let _add = (product) => {
     if(product.name === undefined) {
       return false;
     }
@@ -14,14 +14,14 @@ module.exports = (function(){
     return true;
   }
 
-  function _getById(id) {
+  let _getById = (id) => {
     let [foundProduct] = allProducts.filter((product) => {
       return product.id === id;
     });
     return foundProduct;
   }
 
-  function _editById(id, changedData) {
+  let _editById = (id, changedData) => {
     let productToEdit = _getById(id);
     let productIndex = allProducts.indexOf(productToEdit);
     if(productIndex > -1) {
@@ -40,7 +40,7 @@ module.exports = (function(){
     }
   }
 
-  function _deleteById(id) {
+  let _deleteById = (id) => {
     let productIndex = allProducts.indexOf(_getById(id));
     if(productIndex > -1) {
       allProducts.splice(productIndex, 1);

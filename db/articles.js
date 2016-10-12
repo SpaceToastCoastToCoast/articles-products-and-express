@@ -2,26 +2,26 @@ module.exports = (function(){
 
   let allPosts = [];
 
-  function _all() {
+  let _all = () => {
     return allPosts;
-  }
+  };
 
-  function _add(post) {
+  let _add = (post) => {
     if(post.body === undefined) {
       return false;
     }
     allPosts.push(post);
     return true;
-  }
+  };
 
-  function _getByTitle(title) {
+  let _getByTitle = (title) => {
     let [foundPost] = allPosts.filter((post) => {
       return post.title === title;
     });
     return foundPost;
-  }
+  };
 
-  function _editByTitle(title, changedData) {
+  let _editByTitle = (title, changedData) => {
     let postToEdit = _getByTitle(title);
     let postIndex = allPosts.indexOf(postToEdit);
     if(postIndex > -1) {
@@ -36,9 +36,9 @@ module.exports = (function(){
         postToEdit.author = changedData.author;
       }
     }
-  }
+  };
 
-  function _deleteByTitle(title) {
+  let _deleteByTitle = (title) => {
     let postIndex = allPosts.indexOf(_getByTitle(title));
     if(postIndex > -1) {
       allPosts.splice(postIndex, 1);
@@ -46,7 +46,7 @@ module.exports = (function(){
     } else {
       return false;
     }
-  }
+  };
 
   return {
     all: _all,
