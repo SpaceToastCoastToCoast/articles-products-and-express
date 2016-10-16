@@ -14,8 +14,10 @@ router.use(middleware.requireVersion);
 router.route("/")
 .get((req, res) => {
   //show all articles on an index page
-  res.render('articles/index', {
-    articles: db.all()
+  db.all().then((articles) => {
+    res.render('articles/index', {
+      articles: articles
+    });
   });
 })
 .post(middleware.validateArticleInput, (req, res) => {
@@ -25,12 +27,13 @@ router.route("/")
     body: req.body.body,
     author: req.body.author,
     urlTitle: encodeURI(req.body.title)
-  });
-  //wipes data from previous session in case of reload button stuff
-  req.body = {};
-  //returns to index to show off the new article!
-  res.render('articles/index', {
-    articles: db.all()
+  }).then(() => {
+    //wipes data from previous session in case of reload button stuff
+    req.body = {};
+    //returns to index to show off the new article!
+    res.render('articles/index', {
+      articles: db.all()
+    });
   });
 });
 
@@ -46,12 +49,15 @@ router.route("/new")
 
 router.route("/:id")
 .get((req, res) => {
-  let foundArticle = db.getByTitle(req.params.id);
-  if(foundArticle !== undefined) {
-    res.render('articles/article', foundArticle);
-  } else {
-    res.sendStatus(404);
-  }
+  db.getByTitle(req.params.id)
+  .then((foundArticle) => {
+    let [art] = foundArticle;
+    if(art !== undefined) {
+      res.render('articles/article', art);
+    } else {
+      res.sendStatus(404);
+    }
+  });
 })
 .post(middleware.validateArticleInput, (req, res) => {
   //html forms suck

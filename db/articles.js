@@ -1,24 +1,28 @@
+const db = require('./connection.js');
+
 module.exports = (function(){
 
   let allPosts = [];
 
   let _all = () => {
-    return allPosts;
+    return db.query('SELECT * FROM articles')
+    .catch(error => {
+      console.error(error);
+    });
   };
 
   let _add = (post) => {
-    if(post.body === undefined) {
-      return false;
-    }
-    allPosts.push(post);
-    return true;
+    return db.query('INSERT INTO articles (title, body, author, url_title) VALUES (${title}, ${body}, ${author}, ${urlTitle})', post)
+    .catch(error => {
+      console.error(error);
+    });
   };
 
   let _getByTitle = (title) => {
-    let [foundPost] = allPosts.filter((post) => {
-      return post.title === title;
+    return db.query('SELECT * FROM articles WHERE title = ${title}', {title: title})
+    .catch(error => {
+      console.error(error);
     });
-    return foundPost;
   };
 
   let _editByTitle = (title, changedData) => {

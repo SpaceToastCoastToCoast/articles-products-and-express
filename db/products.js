@@ -1,3 +1,5 @@
+const db = require('./connection.js');
+
 module.exports = (function(){
 
   let allProducts = [];
