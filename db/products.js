@@ -2,55 +2,44 @@ const db = require('./connection.js');
 
 module.exports = (function(){
 
-  let allProducts = [];
-
   let _all = () => {
-    return allProducts;
-  }
+    return db.query('SELECT * FROM products')
+    .catch(error => {
+      console.error(error);
+    });
+  };
 
   let _add = (product) => {
-    if(product.name === undefined) {
-      return false;
-    }
-    allProducts.push(product);
-    return true;
-  }
+    return db.query('INSERT INTO products (name, price, inventory) VALUES (${name}, ${price}, ${inventory})', product)
+    .catch(error => {
+      console.error(error);
+    });
+  };
 
   let _getById = (id) => {
-    let [foundProduct] = allProducts.filter((product) => {
-      return product.id === id;
+    return db.query('SELECT * FROM products WHERE id = ${id}', {id: id})
+    .catch(error => {
+      console.error(error);
     });
-    return foundProduct;
-  }
+  };
 
   let _editById = (id, changedData) => {
-    let productToEdit = _getById(id);
-    let productIndex = allProducts.indexOf(productToEdit);
-    if(productIndex > -1) {
-      if(changedData.hasOwnProperty('name')) {
-        productToEdit.name = changedData.name;
-      }
-      if(changedData.hasOwnProperty('price')) {
-        productToEdit.price = changedData.price;
-      }
-      if(changedData.hasOwnProperty('inventory')) {
-        productToEdit.inventory = changedData.inventory;
-      }
-      return true;
-    } else {
-      return false;
-    }
-  }
+    changedData.price = parseFloat(changedData.price.replace(/[^0-9-.]/g, ''));
+    changedData.inventory = parseInt(changedData.inventory);
+    changedData.id = id;
+    let updateQuery = 'UPDATE products SET name=${name}, price=${price}, inventory=${inventory} WHERE products.id=${id}';
+    return db.query(updateQuery, changedData)
+    .catch(error => {
+      console.error(error);
+    });
+  };
 
   let _deleteById = (id) => {
-    let productIndex = allProducts.indexOf(_getById(id));
-    if(productIndex > -1) {
-      allProducts.splice(productIndex, 1);
-      return true;
-    } else {
-      return false;
-    }
-  }
+    return db.query('DELETE FROM products WHERE products.id=${title}', {id:id})
+    .catch(error => {
+      console.error(error);
+    });
+  };
 
   return {
     all: _all,

@@ -2,8 +2,6 @@ const db = require('./connection.js');
 
 module.exports = (function(){
 
-  let allPosts = [];
-
   let _all = () => {
     return db.query('SELECT * FROM articles')
     .catch(error => {
@@ -36,11 +34,9 @@ module.exports = (function(){
   };
 
   let _deleteByTitle = (title) => {
-    _getByTitle(title).then((post) => {
-      return db.query('DELETE FROM articles WHERE title=${title}', post)
-      .catch(error => {
-        console.error(error);
-      });
+    return db.query('DELETE FROM articles WHERE articles.title=${title}', {title:title})
+    .catch(error => {
+      console.error(error);
     });
   };
 

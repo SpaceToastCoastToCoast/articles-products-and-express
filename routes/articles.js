@@ -9,7 +9,7 @@ const middleware = require('./middleware');
 
 router.use(bodyParser.urlencoded({ extended : true }));
 router.use(logger);
-//router.use(middleware.requireVersion);
+router.use(middleware.requireVersion);
 
 router.route("/")
 .get((req, res) => {
@@ -90,7 +90,7 @@ router.route("/:id")
   db.deleteByTitle(req.params.id)
   .then((result) => {
     res.json({
-      success: result
+      success: true
     });
   });
 });
