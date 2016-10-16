@@ -5,8 +5,6 @@ const db = require('../db/articles.js');
 const logger = require('./logger');
 const middleware = require('./middleware');
 
-
-
 router.use(bodyParser.urlencoded({ extended : true }));
 router.use(logger);
 router.use(middleware.requireVersion);
@@ -69,7 +67,6 @@ router.route("/:id")
     .then((art) => {
       let [foundArticle] = art;
       if(foundArticle !== undefined) {
-        console.log(req.params.id);
         db.editByTitle(req.params.id, req.body)
         .then(() => {
           db.getByTitle(req.params.id).then((art) => {
