@@ -5,7 +5,7 @@ block title
 
 block body
   -var br = '<br />'
-  form(action=`/articles/${urlTitle}` method='post')
+  form(action=`/articles/${url_title}` method='post')
     input(type='hidden' name='_method' value='PUT')
     p Title
     input(type='text' name='title' value=title)

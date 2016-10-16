@@ -19,37 +19,29 @@ module.exports = (function(){
   };
 
   let _getByTitle = (title) => {
-    return db.query('SELECT * FROM articles WHERE title = ${title}', {title: title})
+    return db.query('SELECT DISTINCT ON (title) * FROM articles WHERE title = ${title}', {title: title})
     .catch(error => {
       console.error(error);
     });
   };
 
-  let _editByTitle = (title, changedData) => {
-    let postToEdit = _getByTitle(title);
-    let postIndex = allPosts.indexOf(postToEdit);
-    if(postIndex > -1) {
-      if(changedData.hasOwnProperty('title')) {
-        postToEdit.title = changedData.title;
-        postToEdit.urlTitle = encodeURI(changedData.title);
-      }
-      if(changedData.hasOwnProperty('body')) {
-        postToEdit.body = changedData.body;
-      }
-      if(changedData.hasOwnProperty('author')) {
-        postToEdit.author = changedData.author;
-      }
-    }
+  let _editByTitle = (id, changedData) => {
+    changedData.old_title = id;
+    changedData.urlTitle = encodeURI(changedData.title);
+    let updateQuery = 'UPDATE articles SET title=${title}, body=${body}, author=${author}, url_title=${urlTitle} WHERE articles.title=${old_title}';
+    return db.query(updateQuery, changedData)
+    .catch(error => {
+      console.error(error);
+    });
   };
 
   let _deleteByTitle = (title) => {
-    let postIndex = allPosts.indexOf(_getByTitle(title));
-    if(postIndex > -1) {
-      allPosts.splice(postIndex, 1);
-      return true;
-    } else {
-      return false;
-    }
+    _getByTitle(title).then((post) => {
+      return db.query('DELETE FROM articles WHERE title=${title}', post)
+      .catch(error => {
+        console.error(error);
+      });
+    });
   };
 
   return {
