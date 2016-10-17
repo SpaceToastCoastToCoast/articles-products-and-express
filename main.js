@@ -14,6 +14,13 @@ app.use('/products', productRoute);
 
 app.use(express.static('./public'));
 
+app.route('/')
+.get((req, res) => {
+  res.render('main', {
+    routes: ['articles', 'products']
+  });
+});
+
 const server = app.listen(PORT, () => {
   console.log("server listening on", PORT);
 });

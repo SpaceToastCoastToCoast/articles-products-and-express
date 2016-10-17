@@ -29,3 +29,6 @@ input, textarea {
   color: #00DFFC;
   border: 2px outset #005F6B;
 }
+.capitalizeMe {
+  text-transform: capitalize;
+}
